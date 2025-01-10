@@ -1,0 +1,92 @@
+@import "variables";
+@import "mixins";
+
+:root {
+  @include spread-map($theme-map-dark);
+}
+[data-theme="light"] {
+  @include spread-map($theme-map-light);
+}
+
+body {
+  background: var(--bgSecondary);
+}
+
+/* Scroll bar stylings */
+::-webkit-scrollbar {
+  width: 5px;
+  height: 8px;
+}
+
+/* Track */
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+/* Handle */
+::-webkit-scrollbar-thumb {
+  background: var(--primaryColor);
+  border-radius: 5px;
+}
+
+// MUI DatePicker
+.MuiPickersLayout-root {
+  background-color: var(--bgPrimary);
+  & * {
+    color: var(--titleColor) !important;
+    font-size: 13.982px !important;
+    font-weight: 500 !important;
+  }
+
+  & .MuiPickersYear-root {
+    line-height: unset;
+    & > button {
+      line-height: initial;
+    }
+    & > button.Mui-selected {
+      background-color: var(--primaryColor);
+    }
+    & > button.Mui-disabled {
+      opacity: 0.3;
+    }
+  }
+  & .MuiPickersMonth-root {
+    line-height: unset;
+    & > button {
+      line-height: initial;
+    }
+    & > button.Mui-selected {
+      background-color: var(--primaryColor);
+    }
+    & > button.Mui-disabled {
+      opacity: 0.3;
+    }
+  }
+
+  & .MuiPickersDay-root.Mui-selected {
+    background-color: var(--primaryColor);
+  }
+
+  & button.MuiButtonBase-root:disabled {
+    opacity: 0.3;
+  }
+}
+
+// MUI Time Picker
+.MuiPickersLayout-root {
+  & ul {
+    &::-webkit-scrollbar {
+      width: 3px;
+    }
+  }
+  .MuiList-root {
+    &:after {
+      display: none;
+    }
+  }
+  .MuiButtonBase-root {
+    font-family: 'Inter', sans-serif !important;
+    font-size: 14px !important;
+    font-weight: 500 !important;
+  }
+}

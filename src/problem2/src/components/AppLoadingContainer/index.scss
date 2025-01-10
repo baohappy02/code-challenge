@@ -1,0 +1,15 @@
+.c__loading__container {
+  width: 100%;
+  padding: 60px 30px 110px 30px;
+  margin-top: 0px;
+
+  &-main {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    & > span > span {
+      background-color: var(--titleColor) !important;
+    }
+  }
+}

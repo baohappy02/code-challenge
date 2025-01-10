@@ -1,0 +1,279 @@
+$animation-speed: 0.3s;
+
+.c__select {
+  position: relative;
+  padding-top: 20px;
+  padding-bottom: 12px;
+  .c__select-field {
+    box-sizing: border-box;
+
+    width: 100%;
+    outline: 0;
+    border: 1px solid var(--lineColor);
+    border-radius: 8px;
+
+    font-size: 16px;
+    color: var(--titleColor);
+    font-weight: 400;
+    line-height: 140%;
+
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    column-gap: 10px;
+
+    background: transparent;
+    transition: border-color $animation-speed;
+
+    &-large {
+      min-height: 54px;
+      padding: 16px 20px;
+    }
+    &-small {
+      // height: 42px;
+      padding: 10px 16px;
+    }
+    &-disabled {
+      background: var(--bgTertiary);
+    }
+    .c__select-input {
+      padding: 0;
+      width: 100%;
+      height: 100%;
+      background-color: transparent;
+      border: none;
+      outline: 0;
+      font-size: 16px;
+      text-transform: capitalize;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+    .c__select-input:active,
+    .c__select-input:focus {
+      border: none;
+    }
+    &.c__select-field-focused {
+      border: 1px solid var(--primaryColor);
+    }
+  }
+  .c__select-field.c__select_border_warning {
+    border: 1px solid var(--warningColor);
+  }
+  .c__select-field.c__select_border {
+    border: 1px solid var(--lineColor);
+    &-warning {
+      border: 1px solid var(--warningColor);
+    }
+    &-error {
+      border: 1px solid var(--errorColor);
+    }
+  }
+  .c__input-warning {
+    position: absolute;
+    left: 0;
+    bottom: 0px;
+    font-size: 12px;
+    display: flex;
+    span {
+      color: var(--warningColor);
+      cursor: pointer;
+    }
+  }
+  .c__select-field-icon {
+    display: flex;
+    align-items: center;
+  }
+
+  .c__select-field::placeholder {
+    color: transparent;
+  }
+  .c__select-label {
+    transition: all $animation-speed;
+    display: flex;
+    .warning-conflict {
+      color: var(--warningColor);
+      margin-right: 5px;
+      margin-left: 10px;
+      cursor: pointer;
+      &-message {
+        span {
+          color: var(--warningColor);
+        }
+      }
+    }
+  }
+
+  .c__select-field:placeholder-shown ~ .c__select-label {
+    cursor: pointer;
+    color: var(--placeholderColor);
+    font-size: 16px;
+    font-weight: 400;
+    line-height: 140%; /* 22.4px */
+
+    top: 50%;
+    left: 20px;
+    transform: translateY(-50%);
+  }
+
+  .c__select-field:not(:placeholder-shown) ~ .c__select-label-noFloating {
+    display: none;
+  }
+
+  label,
+  .c__select-field:focus ~ .c__select-label {
+    position: absolute;
+    top: 6px;
+    transform: translateY(-140%);
+    left: 0;
+    display: block;
+
+    color: var(--titleColor);
+    font-size: 14px;
+    font-weight: 500;
+    line-height: 140%; /* 19.6px */
+    letter-spacing: 0.5px;
+    &-noFloating {
+      display: none;
+    }
+  }
+
+  .c__select-clear {
+    width: 14px;
+    height: 14px;
+    cursor: pointer;
+    margin-left: 5px;
+    & > img {
+      display: block;
+      width: 100%;
+      object-fit: contain;
+    }
+  }
+
+  .c__select-message {
+    margin-top: 4px;
+
+    font-size: 12px;
+    font-weight: 400;
+    line-height: 140%;
+
+    &-error {
+      color: var(--errorColor);
+      text-transform: none;
+    }
+    &-success {
+      color: var(--successColor);
+    }
+    &-caption {
+      color: var(--titleColor);
+    }
+    .c__select-field-icon {
+      position: absolute;
+      top: 50%;
+      right: 12px;
+    }
+  }
+  .selected-values {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 2px;
+  }
+  .selected-value {
+    display: flex;
+    padding: 3px 2px 3px 4px;
+    justify-content: center;
+    border: 1px solid var(--lineColor);
+    border-radius: 4px;
+    background: var(--bgTertiary);
+    text-transform: capitalize;
+    font-size: 12px;
+    align-items: center;
+    height: 22px;
+  }
+  .c__select-field-with-prefix {
+    padding-left: 40px;
+  }
+}
+
+.c__select-prefix {
+  position: absolute;
+  top: 50%;
+  left: 12px;
+  transform: translateY(-50%);
+  width: 22px;
+  height: 22px;
+}
+
+.c__select-options-container {
+  // position: absolute;
+  background: var(--bgPrimary);
+  // z-index: 13;
+  border: 1px solid var(--lineColor);
+  border-radius: 8px;
+  width: 100%;
+  max-height: 200px;
+  overflow-y: scroll;
+}
+.c__select-options {
+  margin-top: 10px;
+  border-top: 1px solid var(--lineColor);
+  .c__select-option {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px 24px;
+    border-bottom: 1px solid var(--lineColor);
+    padding-right: 15px;
+  }
+}
+.c__select-search {
+  display: flex;
+  border: 1px solid var(--lineColor);
+  border-radius: 8px;
+  justify-content: center;
+  margin: 0 12px;
+  align-items: center;
+  margin-top: 15px;
+  input {
+    width: 100%;
+    border-radius: 8px;
+    padding: 6px 12px;
+    background: transparent;
+    border: none;
+    outline: 0;
+    height: 34px;
+    font-size: 16px;
+  }
+}
+.c__select-option-label {
+  width: 100%;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  cursor: pointer;
+  text-transform: capitalize;
+  display: flex;
+  gap: 5px;
+  justify-items: center;
+  align-items: center;
+  &-wrapper {
+    display: flex;
+    align-items: center;
+    width: 90%;
+  }
+}
+.c__select-option-selected {
+  background-color: var(--bgTertiary);
+}
+.c__select-option-popup-content {
+  width: auto;
+  font-size: 14px;
+}
+.c__select-option-label-tooltip {
+  display: block;
+  background-color: var(--primaryColor);
+  padding: 8px;
+  border-radius: 8px;
+  &.hide {
+    display: none;
+  }
+}

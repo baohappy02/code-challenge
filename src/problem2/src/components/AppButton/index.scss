@@ -1,0 +1,36 @@
+.btn {
+  border-radius: 8px;
+  color: var(--titleColor);
+  text-transform: capitalize;
+  font-size: 16px;
+  font-weight: 500;
+  cursor: pointer;
+  &-primary {
+    background-color: var(--primaryColor);
+    border: 1px solid var(--primaryColor);
+  }
+  &-secondary {
+    background-color: var(--bgPrimary);
+    border: 1px solid white;
+  }
+  &-large {
+    padding: 16px 20px;
+    height: 54px;
+  }
+  &-small {
+    padding: 10px 20px;
+    height: 42px;
+  }
+  &-disabled {
+    opacity: 0.6;
+    background-color: var(--primaryColor);
+    border: 1px solid var(--primaryColor);
+  }
+  &:disabled {
+    opacity: 0.6;
+    cursor: not-allowed !important;
+  }
+  & > span {
+    display: initial !important;
+  }
+}

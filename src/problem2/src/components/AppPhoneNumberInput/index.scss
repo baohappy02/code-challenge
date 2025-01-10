@@ -1,0 +1,148 @@
+$animation-speed: 0.3s;
+.c__phoneNumberInput-wrapper {
+  position: relative;
+  padding-top: 20px;
+  padding-bottom: 12px;
+}
+.c__phoneNumberInput {
+  &-border {
+    &-error {
+      & .PhoneInput {
+        border-color: var(--errorColor) !important;
+      }
+    }
+    &-success {
+      & .PhoneInput {
+        border-color: var(--successColor) !important;
+      }
+    }
+    &-caption {
+      & .PhoneInput {
+        border-color: var(--titleColor) !important;
+      }
+    }
+  }
+
+  position: relative;
+  .PhoneInput {
+    &--disabled {
+      background-color: var(--bgTertiary) !important;
+      cursor: default;
+      & input {
+        cursor: default !important;
+      }
+    }
+
+    box-sizing: border-box;
+
+    width: 100%;
+    outline: 0;
+    border: 1px solid var(--lineColor);
+    border-radius: 8px;
+
+    color: var(--titleColor);
+    font-size: 16px;
+    font-weight: 400;
+    line-height: 140%; /* 22.4px */
+
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    column-gap: 6px;
+
+    background: transparent;
+    transition: border-color $animation-speed;
+
+    &Input {
+      outline: none;
+      background-color: transparent;
+      color: var(--titleColor);
+      font-size: 16px;
+      font-style: normal;
+      font-weight: 400;
+      line-height: 140%; /* 22.4px */
+    }
+    &Input::placeholder {
+      color: transparent;
+    }
+
+    &Country {
+      & option {
+        background-color: var(--bgPrimary);
+        color: var(--titleColor);
+      }
+    }
+  }
+
+  &-suffix {
+    position: absolute;
+    right: 12px;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 22px;
+    height: 22px;
+  }
+}
+
+.c__phoneNumberInput-label {
+  transition: all $animation-speed;
+  cursor: text;
+  position: absolute;
+  color: var(--placeholderColor);
+  font-size: 16px;
+  font-style: normal;
+  font-weight: 400;
+  line-height: 140%;
+  white-space: nowrap;
+  top: 50%;
+  left: 98px;
+  transform: translateY(-50%);
+}
+
+.c__phoneNumberInput-label-active {
+  color: var(--titleColor);
+  font-size: 14px;
+  font-weight: 500;
+  line-height: 140%;
+  left: 0;
+  top: 6px;
+  position: absolute;
+  transform: translateY(-140%);
+  display: block;
+}
+.c__phoneNumberInput-message {
+  margin-top: 4px;
+
+  font-size: 12px;
+  font-weight: 400;
+  line-height: 140%;
+
+  &-error {
+    color: var(--errorColor);
+  }
+  &-success {
+    color: var(--successColor);
+  }
+  &-caption {
+    color: var(--titleColor);
+  }
+}
+.c__phoneNumberInput-large {
+  .PhoneInput {
+    height: 54px;
+    padding: 16px 20px 16px 12px;
+  }
+}
+
+.c__phoneNumberInput-small {
+  .PhoneInput {
+    height: 42px;
+    padding: 10px 20px 10px 12px;
+  }
+}
+
+.c__phoneNumberInput-appendRight {
+  .PhoneInput {
+    padding-right: 44px;
+  }
+}

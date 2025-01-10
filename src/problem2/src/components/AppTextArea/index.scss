@@ -1,0 +1,113 @@
+$animation-speed: 0.3s;
+
+.c__textarea {
+  position: relative;
+  padding-top: 20px;
+  padding-bottom: 12px;
+}
+
+.c__textarea-field {
+  resize: vertical;
+  min-height: 56.4px;
+  box-sizing: border-box;
+
+  width: 100%;
+  outline: 0;
+  border: 1px solid var(--lineColor);
+  border-radius: 8px;
+
+  font-size: 16px;
+  color: var(--titleColor);
+  font-weight: 400;
+  line-height: 140%;
+
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  column-gap: 10px;
+
+  background: transparent;
+  transition: border-color $animation-speed;
+
+  padding: 16px 20px;
+  height: auto;
+
+  &-border {
+    &-error {
+      border-color: var(--errorColor) !important;
+    }
+    &-success {
+      border-color: var(--successColor) !important;
+    }
+    &-caption {
+      border-color: var(--titleColor) !important;
+    }
+  }
+  &-disabled {
+    background-color: var(--bgTertiary);
+  }
+}
+
+.c__textarea-field::placeholder {
+  color: transparent;
+}
+
+.c__textarea-label {
+  transition: all $animation-speed;
+}
+
+.c__textarea-field:focus {
+  border: 1px solid var(--primaryColor);
+}
+
+.c__textarea-field:placeholder-shown ~ .c__textarea-label {
+  cursor: text;
+  color: var(--placeholderColor);
+  font-size: 16px;
+  font-weight: 400;
+  line-height: 140%; /* 22.4px */
+
+  top: calc(16px + (22.4px / 2));
+  left: 20px;
+  transform: translateY(50%);
+}
+
+.c__textarea-field:not(:placeholder-shown) ~ .c__textarea-label-noFloating {
+  display: none;
+}
+
+.c__textarea-label,
+.c__textarea-field:focus ~ .c__textarea-label {
+  position: absolute;
+  top: 6px;
+  transform: translateY(-50%);
+  left: 0;
+  display: block;
+
+  color: var(--titleColor);
+  font-size: 14px;
+  font-weight: 500;
+  line-height: 140%; /* 19.6px */
+  letter-spacing: 0.5px;
+  &-noFloating {
+    display: none;
+  }
+}
+
+.c__textarea-message {
+  margin-top: 4px;
+
+  font-size: 12px;
+  font-weight: 400;
+  line-height: 140%;
+
+  &-error {
+    color: var(--errorColor);
+  }
+  &-success {
+    color: var(--successColor);
+  }
+  &-caption {
+    color: var(--titleColor);
+  }
+}

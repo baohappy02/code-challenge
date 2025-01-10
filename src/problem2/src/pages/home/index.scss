@@ -1,0 +1,246 @@
+.studentAddForm {
+  &__content {
+    &-wrapper {
+      display: flex;
+      flex-direction: column;
+      gap: 24px;
+
+      &-header {
+        width: 100%;
+        display: flex;
+        justify-content: space-between;
+      }
+    }
+
+    .studentAddForm__content-personal_information {
+      display: grid;
+      grid-template-columns: repeat(6, minmax(0, 1fr));
+      column-gap: 24px;
+
+      .item {
+        grid-column: span 2;
+      }
+
+      .item_custom {
+        grid-column: span 3;
+      }
+    }
+
+    .studentAddForm__content-emergency_contacts {
+      display: flex;
+      flex-direction: column;
+      align-items: flex-start;
+
+      .studentAddForm__content-emergency_contacts_wrapper {
+        width: 100%;
+        display: grid;
+        grid-template-columns: repeat(13, minmax(0, 1fr));
+        column-gap: 24px;
+
+        .item_single {
+          padding: 20px 0;
+
+          & > button {
+            aspect-ratio: 1;
+            width: 54px;
+            padding: 0;
+
+            display: flex;
+            justify-content: center;
+            align-items: center;
+
+            & > svg {
+              min-width: 24px;
+              min-height: 24px;
+            }
+          }
+        }
+
+        .item_small {
+          grid-column: span 2;
+        }
+
+        .item {
+          grid-column: span 4;
+        }
+
+        .item_custom {
+          grid-column: span 6;
+        }
+      }
+
+      .studentAddForm__content-emergency_contacts-btn_add_more {
+        display: flex;
+        padding: 10px 20px;
+        justify-content: center;
+        align-items: center;
+        gap: 10px;
+
+        border-radius: 8px;
+        border: 1px solid var(--titleColor);
+
+        width: max-content;
+
+        margin-bottom: 24px;
+
+        color: var(--titleColor);
+        font-size: 16px;
+        font-style: normal;
+        font-weight: 500;
+        letter-spacing: 0.3px;
+        text-transform: capitalize;
+      }
+    }
+
+    .studentAddForm__content-health_questionnaire_not_field_err {
+      color: var(--errorColor);
+      font-size: 20px;
+      font-style: normal;
+      font-weight: 400;
+      line-height: 140%;
+    }
+
+    &__healthQuestionnaire {
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+
+      width: 100%;
+
+      &__errors {
+        color: var(--errorColor);
+        font-size: 20px;
+        font-weight: 400;
+      }
+
+      .custom_flex_col {
+        flex-direction: column;
+        align-items: flex-end;
+        gap: 0px;
+      }
+
+      .quest_border_top {
+        border-top: 1px solid var(--lineColor);
+        padding-top: 12px !important;
+        margin-top: 20px;
+      }
+
+      .quest_border_bot {
+        border-bottom: 1px solid var(--lineColor);
+        padding-top: 4px;
+        padding-bottom: 12px;
+      }
+
+      .showQuestError {
+        .c__appSwitch_slider {
+          border: 1px solid var(--errorColor) !important;
+        }
+      }
+
+      .c__textarea {
+        width: 100%;
+        padding-bottom: 0px;
+
+        & > textarea {
+          height: 120px;
+          min-height: 120px;
+          resize: none;
+        }
+      }
+
+      .input-limit {
+        display: flex;
+
+        user-select: none;
+
+        color: var(--placeholderColor);
+        font-size: 10px;
+        font-weight: 400;
+      }
+
+      & > div {
+        display: flex;
+        align-items: center;
+        gap: 48px;
+      }
+
+      .health_quest {
+        display: flex;
+        flex-direction: column;
+        gap: 8px;
+
+        width: 100%;
+
+        .quest {
+          color: var(--titleColor);
+          font-size: 18px;
+          font-weight: 500;
+        }
+
+        .customQuestError {
+          display: flex;
+          align-items: center;
+          gap: 8px;
+          color: var(--errorColor);
+
+          & > svg {
+            stroke: var(--errorColor) !important;
+          }
+
+          .text {
+            color: var(--errorColor);
+            font-size: 12px;
+            font-style: normal;
+            font-weight: 500;
+            line-height: 140%; /* 16.8px */
+          }
+        }
+
+        & > .tooltip-trigger {
+          display: flex;
+          justify-content: center;
+          align-items: center;
+          width: 24px;
+          height: 24px;
+          min-width: 24px;
+          min-height: 24px;
+          max-width: 24px;
+          max-height: 24px;
+        }
+      }
+    }
+    &__section {
+      row-gap: 0px;
+      &--1_column {
+        display: grid;
+      }
+      &--2_column {
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        column-gap: 24px;
+      }
+      &-header {
+        margin-bottom: 24px;
+        &--1_column {
+          grid-column: span 1;
+        }
+        &--2_column {
+          grid-column: span 2;
+        }
+        .description {
+          font-size: 14px;
+        }
+      }
+    }
+  }
+  &__actions {
+    display: flex;
+    align-items: center;
+    column-gap: 24px;
+    padding: 24px;
+    border-top: 1px solid var(--lineColor);
+    & > button {
+      cursor: pointer;
+    }
+  }
+}

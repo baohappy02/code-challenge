@@ -1,0 +1,54 @@
+// Default theme | DARK
+$theme-map-dark: (
+  // Text color
+  --titleColor: #ffffff,
+  --subTitleColor: #9999A3,
+  --labelColor: #63636e,
+  --placeholderColor: #8e8e96,
+  --lineColor: #40404A,
+
+  // Background color
+  --bgPrimary: #252a2d,
+  --bgSecondary: #121313,
+  --bgTertiary: #1A1A1C,
+  --bgClass: #fd7c04,
+
+  // State color
+  --primaryColor: #2EB67D,
+  --errorColor: #eb5757,
+  --successColor: #0bb783,
+  --warningColor: #e8a23a,
+  --infoColor: #919199,
+
+  --lightBlueColor: #1b84ff,
+  --lightBlue10Color: #e8f3ff,
+
+  --lightGreenColor: #0ead64,
+  --lightPink: #f1416c
+);
+
+// Override the default theme | LIGHT
+$theme-map-light: (
+  // Text color
+  --titleColor: #ffffff,
+  --subTitleColor: #85858f,
+  --labelColor: #63636e,
+  --placeholderColor: #8e8e96,
+  --lineColor: #40404a,
+
+  // Background color
+  --bgPrimary: #0D0E11,
+  --bgSecondary: #031E14,
+  --bgTertiary: #141518,
+  --bgClass: #fd7c04,
+
+  // State color
+  --primaryColor: #2EB67D,
+  --errorColor: #eb5757,
+  --successColor: #0bb783,
+  --warningColor: #e8a23a,
+  --infoColor: #919199,
+
+  --lightBlueColor: #1b84ff,
+  --lightBlue10Color: #e8f3ff
+);
