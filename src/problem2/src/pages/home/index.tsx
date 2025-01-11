@@ -510,7 +510,7 @@ const StudentAddForm = () => {
   }, [fetchData]);
 
   return (
-    <div className="studentAddForm__content disable-scroll xl:max-w-[60vw] 2xl:max-w-[1000px] m-auto">
+    <div className="studentAddForm__content disable-scroll m-auto xl:max-w-[60vw] 2xl:max-w-[1000px]">
       {!isTranslationReady ? (
         <div className="flex flex-col items-center gap-20">
           <h1 className="text-2xl text-white opacity-20">
@@ -540,7 +540,7 @@ const StudentAddForm = () => {
               <div className="studentAddForm__content-wrapper-header">
                 <AppCardHeader title={t("personalInformation")} />
               </div>
-              <div className="studentAddForm__content-personal_information">
+              <div className="studentAddForm__content-personal_information !flex flex-col lg:!grid">
                 <div className="item">
                   <AppInput
                     {...register("firstName")}
@@ -609,7 +609,7 @@ const StudentAddForm = () => {
             <>
               <AppCardHeader title={t("emergencyContact")} />
               <div className="studentAddForm__content-emergency_contacts">
-                <div className="studentAddForm__content-emergency_contacts_wrapper">
+                <div className="studentAddForm__content-emergency_contacts_wrapper !flex flex-col lg:!grid">
                   {fields.map((field, index) => (
                     <Fragment key={field.id}>
                       <div className="item_small">
@@ -746,7 +746,7 @@ const StudentAddForm = () => {
                         } ${
                           item?.answerType === HEALTH_ANSWER_TYPE.STRING
                             ? "custom_flex_col"
-                            : ""
+                            : "!flex-col lg:!flex-row"
                         } ${__checkShowQuestError(item) ? "showQuestError" : ""}`}
                         key={index}
                       >
@@ -817,7 +817,7 @@ const StudentAddForm = () => {
 
             <AppButton
               variant={isDisable ? "disabled" : "primary"}
-              className="my-10 ml-auto"
+              className="my-10 lg:ml-auto"
               onClick={handleSubmit}
             >
               <p className="text-lg leading-[1.125rem]">

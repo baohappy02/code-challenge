@@ -67,8 +67,7 @@ const result = [
   },
   {
     _id: "a9bc9c36-608d-4227-9896-ab14182d5971",
-    question:
-      "worsenedCondition",
+    question: "worsenedCondition",
     expectedAnswer: "other",
     isActive: false,
     mandatory: true,

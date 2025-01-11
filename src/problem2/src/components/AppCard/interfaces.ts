@@ -1,4 +1,4 @@
-import { HTMLAttributes, ReactNode } from 'react';
+import { HTMLAttributes, ReactNode } from "react";
 
 export interface IAppCardProps extends HTMLAttributes<HTMLDivElement> {
   children: ReactNode;

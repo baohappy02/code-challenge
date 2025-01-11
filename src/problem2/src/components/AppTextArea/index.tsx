@@ -1,13 +1,13 @@
-import './index.scss';
+import "./index.scss";
 
-import React, { TextareaHTMLAttributes, useMemo } from 'react';
+import React, { TextareaHTMLAttributes, useMemo } from "react";
 
 interface IAppTextAreaProps
   extends TextareaHTMLAttributes<HTMLTextAreaElement> {
   label: string;
   noFloatingLabel?: boolean;
   message?: {
-    type: 'error' | 'success' | 'caption';
+    type: "error" | "success" | "caption";
     text: string;
   };
   showDescription?: boolean;
@@ -25,7 +25,7 @@ const AppTextArea = React.forwardRef<HTMLTextAreaElement, IAppTextAreaProps>(
       description,
       ...props
     },
-    ref
+    ref,
   ) => {
     const __renderMessage = useMemo(() => {
       if (!message) return null;
@@ -44,8 +44,8 @@ const AppTextArea = React.forwardRef<HTMLTextAreaElement, IAppTextAreaProps>(
           rows={rows}
           {...props}
           className={`c__textarea-field ${
-            message?.text ? `c__textarea-field-border-${message?.type}` : ''
-          }${props.disabled ? ' c__textarea-field-disabled' : ''}`}
+            message?.text ? `c__textarea-field-border-${message?.type}` : ""
+          }${props.disabled ? "c__textarea-field-disabled" : ""}`}
           id={props.name}
           ref={ref}
           placeholder={label}
@@ -54,7 +54,7 @@ const AppTextArea = React.forwardRef<HTMLTextAreaElement, IAppTextAreaProps>(
 
         <label
           className={`c__textarea-label ${
-            noFloatingLabel ? 'c__textarea-label-noFloating' : ' '
+            noFloatingLabel ? "c__textarea-label-noFloating" : " "
           }`}
           htmlFor={props.name}
         >
@@ -68,7 +68,7 @@ const AppTextArea = React.forwardRef<HTMLTextAreaElement, IAppTextAreaProps>(
         {__renderMessage}
       </div>
     );
-  }
+  },
 );
 
 export default AppTextArea;

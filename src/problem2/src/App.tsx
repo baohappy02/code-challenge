@@ -4,7 +4,7 @@ import "./App.scss";
 
 const App = () => {
   return (
-    <div className="p-20">
+    <div className="rounded-lg border border-gray-800 p-[1px] lg:p-20">
       <Home />
     </div>
   );

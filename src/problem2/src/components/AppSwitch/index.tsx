@@ -1,4 +1,4 @@
-import './index.scss';
+import "./index.scss";
 
 interface Props {
   value: boolean;
@@ -8,8 +8,8 @@ interface Props {
 
 const AppSwitch: React.FC<Props> = ({
   value,
-  label = ['NO', 'YES'],
-  onChange
+  label = ["NO", "YES"],
+  onChange,
 }) => {
   return (
     <>
@@ -24,7 +24,7 @@ const AppSwitch: React.FC<Props> = ({
           <span className="c__appSwitch_slider"></span>
 
           <div
-            className={`c__appSwitch_label ${value ? 'active' : 'inactive'}`}
+            className={`c__appSwitch_label ${value ? "active" : "inactive"}`}
           >
             <div className="c__appSwitch_label_no">{label?.[0]}</div>
             <div className="c__appSwitch_label_yes">{label?.[1]}</div>

@@ -373,7 +373,7 @@ const AppSelect = forwardRef<HTMLInputElement, IAppSelectProps>(
                         trigger={
                           <div className="c__select-option-label-wrapper">
                             <div
-                              className="text-white c__select-option-label"
+                              className="c__select-option-label text-white"
                               onMouseEnter={handleMouseEnter}
                               onMouseLeave={handleMouseLeave}
                             >

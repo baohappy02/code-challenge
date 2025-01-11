@@ -1,7 +1,7 @@
-import './index.scss';
+import "./index.scss";
 
-import { memo } from 'react';
-import { BeatLoader } from 'react-spinners';
+import { memo } from "react";
+import { BeatLoader } from "react-spinners";
 
 const AppLoadingContainer = () => {
   return (
