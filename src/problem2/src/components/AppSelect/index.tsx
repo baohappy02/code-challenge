@@ -286,7 +286,7 @@ const AppSelect = forwardRef<HTMLInputElement, IAppSelectProps>(
       <div className="c__select" style={props.style} ref={selectRef}>
         <div style={{ position: "relative" }}>
           <div
-            className={`c__select-field c__select-field-${inputSize}${
+            className={`c__select-field c__select-field-${inputSize} ${
               isFocused ? "c__select-field-focused" : ""
             }${!!startIcon ? "c__select-field-with-prefix" : ""}${
               warning ? "c__select_border_warning" : ""
@@ -373,7 +373,7 @@ const AppSelect = forwardRef<HTMLInputElement, IAppSelectProps>(
                         trigger={
                           <div className="c__select-option-label-wrapper">
                             <div
-                              className="c__select-option-label"
+                              className="text-white c__select-option-label"
                               onMouseEnter={handleMouseEnter}
                               onMouseLeave={handleMouseLeave}
                             >

@@ -3,8 +3,8 @@ import { IHealthQuestionnaire } from "src/interfaces/healthQuestionnaire.interfa
 const result = [
   {
     _id: "68c5bd83-35f7-4d83-aa56-528292bd6db2",
-    question: "Do you have any special condition?",
-    expectedAnswer: "yes",
+    question: "specialCondition",
+    expectedAnswer: "no",
     isActive: true,
     mandatory: true,
     answerType: "number",
@@ -16,7 +16,7 @@ const result = [
   },
   {
     _id: "5d25a8d0-3613-4c6c-b76d-bac69d1fa546",
-    question: "Are you on medicine?",
+    question: "onMedicine",
     expectedAnswer: "no",
     isActive: true,
     mandatory: true,
@@ -29,7 +29,7 @@ const result = [
   },
   {
     _id: "02ba71ca-adcc-4f1e-8c0c-b09436266808",
-    question: "How often you go to hospital?",
+    question: "hospitalVisitFrequency",
     isActive: true,
     mandatory: true,
     answerType: "string",
@@ -42,8 +42,7 @@ const result = [
   },
   {
     _id: "dfadbbc5-66d9-469a-90c1-bfcf411e3755",
-    question:
-      "Does your child/Do you suffer from any condition that can affect their/your breathing, for example Asthma, If so please provide information below on any treatment that may be required before, during or after physical activity. ",
+    question: "breathingCondition",
     expectedAnswer: "yes",
     isActive: true,
     mandatory: true,
@@ -56,7 +55,7 @@ const result = [
   },
   {
     _id: "554287e9-adab-4afc-b6ee-149b5fd7a001",
-    question: "Please note here any medication/inhalers required:",
+    question: "medicationNote",
     isActive: false,
     mandatory: false,
     answerType: "string",
@@ -69,7 +68,7 @@ const result = [
   {
     _id: "a9bc9c36-608d-4227-9896-ab14182d5971",
     question:
-      "Does your child/Do you have any condition that can effectively be worsened by physical activity?",
+      "worsenedCondition",
     expectedAnswer: "other",
     isActive: false,
     mandatory: true,

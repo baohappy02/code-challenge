@@ -9,6 +9,7 @@ import {
 import AppSelect from "../../components/AppSelect";
 
 import { GENDER_TYPE_OPTIONS } from "../../constants";
+import { useTranslation } from "react-i18next";
 
 interface Props extends InputHTMLAttributes<HTMLInputElement> {
   label?: string;
@@ -29,6 +30,8 @@ const AppGenderInput = ({
   onChangeGender,
   ...props
 }: Props) => {
+  const { t } = useTranslation();
+
   const [gender, setGender] = useState<string>("");
 
   const handleEmitChange = useCallback((location: string) => {
@@ -47,7 +50,10 @@ const AppGenderInput = ({
         {...props}
         label={label}
         searchable={searchable}
-        options={GENDER_TYPE_OPTIONS}
+        options={GENDER_TYPE_OPTIONS.map((option) => ({
+          label: t(option.label),
+          value: option.value,
+        }))}
         value={gender}
         message={message}
         onChange={(val) => {

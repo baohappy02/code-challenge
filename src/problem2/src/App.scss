@@ -85,8 +85,9 @@ body {
     }
   }
   .MuiButtonBase-root {
-    font-family: 'Inter', sans-serif !important;
+    font-family: "Inter", sans-serif !important;
     font-size: 14px !important;
     font-weight: 500 !important;
+    color: var(--titleColor);
   }
 }

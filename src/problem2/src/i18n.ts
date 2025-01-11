@@ -6,10 +6,13 @@ import { KEY_LANGUAGE } from "./constants/localStorage.constant";
 import i18n from "i18next";
 import Backend from "i18next-http-backend";
 
-const BASE_URL = import.meta.env.VITE_BASE_URL;
-
 const savedLanguage = localStorage.getItem(KEY_LANGUAGE) || LANGUAGE.EN;
 dayjs.locale(savedLanguage);
+
+const DETECTION_OPTIONS = {
+  order: ["htmlTag", "cookie", "localStorage", "path", "subdomain"],
+  caches: ["localStorage"],
+};
 
 i18n
   .use(Backend)
@@ -17,8 +20,8 @@ i18n
   .use(initReactI18next)
   .init({
     lng: savedLanguage,
-    fallbackLng: "en",
-    supportedLngs: ["en", "vi", "ur", "th"],
+    fallbackLng: LANGUAGE.EN,
+    supportedLngs: ["en", "vi", "ur", "th"] as LANGUAGE[],
     interpolation: {
       escapeValue: false,
     },
@@ -26,17 +29,16 @@ i18n
       useSuspense: false, // Disable suspense
     },
     // Use the custom backend
+    detection: DETECTION_OPTIONS,
     backend: {
       loadPath: () =>
-        new Promise((resolve) => {
-          // fake delay
-          setTimeout(() => resolve(`${BASE_URL}/translations`), 0);
-        }),
-
-      parse: (data: string, language: string) => {
-        const jsonData = JSON.parse(data);
-
-        return jsonData.data[language] || jsonData.data[LANGUAGE.EN] || {};
+        new Promise((resolve) =>
+          setTimeout(() => resolve("/translations.json"), 250),
+        ),
+      crossDomain: true,
+      parse: (data: any, language: string) => {
+        const parseData = JSON.parse(data);
+        return parseData[language] || parseData[LANGUAGE.EN] || {};
       },
     },
     returnEmptyString: false,

@@ -38,6 +38,9 @@ import AppTextArea from "src/components/AppTextArea";
 import AppSwitch from "src/components/AppSwitch";
 import { convertToUnixTime } from "src/helpers/time.helper";
 import { GENDER_VALUE } from "src/enums/student.enum";
+import AppButton from "src/components/AppButton";
+import { LANGUAGE } from "src/enums/language.enum";
+import { KEY_LANGUAGE } from "src/constants/localStorage.constant";
 
 const validationSchema = yup.OBJECT({
   firstName: yup.STUDENT_NAME,
@@ -50,7 +53,11 @@ const validationSchema = yup.OBJECT({
 });
 
 const StudentAddForm = () => {
-  const { t, ready: isTranslationReady } = useTranslation();
+  const {
+    t,
+    ready: isTranslationReady,
+    i18n: { language, changeLanguage },
+  } = useTranslation();
 
   const [loadingQuest, setLoadingQuest] = useState(true);
 
@@ -59,6 +66,13 @@ const StudentAddForm = () => {
   const [questionList, setQuestionList] = useState<
     ListHealthQuestionnaireDto[]
   >([]);
+
+  const handleChangeLanguage = useCallback(() => {
+    const newLang = language === LANGUAGE.EN ? LANGUAGE.VI : LANGUAGE.EN;
+
+    localStorage.setItem(KEY_LANGUAGE, newLang);
+    changeLanguage(newLang);
+  }, [language, changeLanguage]);
 
   const __checkShowQuestError = useCallback(
     (quest: ListHealthQuestionnaireDto): boolean => {
@@ -155,7 +169,7 @@ const StudentAddForm = () => {
 
         return !!item?.answer;
       });
-  }, [questionList, loadingQuest]);
+  }, [questionList, loadingQuest, errors]);
 
   const validateFieldDOB = useMemo(
     () =>
@@ -378,6 +392,95 @@ const StudentAddForm = () => {
     }
   }, [setError, clearErrors, getValues, t]);
 
+  const triggerValidate = useCallback(() => {
+    const triggerList = [
+      ...(!watchAllFields?.firstName ? ["firstName"] : []),
+      ...(!watchAllFields?.lastName ? ["lastName"] : []),
+      ...(!watchAllFields?.gender ? ["gender"] : []),
+      ...(!watchAllFields?.locationId ? ["locationId"] : []),
+      ...(!validateFieldDOB ? ["dob"] : []),
+    ];
+
+    if (triggerList?.length) {
+      // @ts-ignore
+      trigger(triggerList);
+    }
+
+    if (!getValues().emergencyContacts?.length) return;
+
+    const groups: any = {};
+
+    getValues().emergencyContacts.forEach((obj, idx) => {
+      const value = obj.phoneNumber;
+      if (value) {
+        groups[value] = groups[value] || [];
+        groups[value].push(idx);
+      }
+    });
+
+    const results: any[] = Object.values(groups).filter(
+      (indexes: any) => indexes.length > 1,
+    );
+
+    const result: number[] = [].concat(...results).sort((a, b) => a - b);
+
+    for (const [
+      key,
+      emergencyContact,
+    ] of getValues().emergencyContacts.entries()) {
+      if (key > 0) {
+        if (
+          result?.includes(key) &&
+          emergencyContact?.phoneNumber &&
+          isValidPhoneNumber(emergencyContact?.phoneNumber) &&
+          isPossiblePhoneNumber(emergencyContact?.phoneNumber)
+        ) {
+          trigger([
+            `emergencyContacts.${key}.contactName`,
+            `emergencyContacts.${key}.contactSurname`,
+            `emergencyContacts.${key}.relationship`,
+          ]);
+
+          setError(`emergencyContacts.${key}.phoneNumber`, {
+            type: "custom",
+            message: t("thisPhoneNumberIsUsedByOtherEmergencyContacts"),
+          });
+        } else {
+          clearErrors(`emergencyContacts.${key}.phoneNumber`);
+
+          trigger([
+            `emergencyContacts.${key}.contactName`,
+            `emergencyContacts.${key}.contactSurname`,
+            `emergencyContacts.${key}.relationship`,
+            `emergencyContacts.${key}.phoneNumber`,
+          ]);
+        }
+      } else {
+        trigger([`emergencyContacts.${key}.relationship`]);
+      }
+    }
+  }, [
+    t,
+    trigger,
+    setError,
+    watchAllFields,
+    validateFieldDOB,
+    getValues,
+    clearErrors,
+  ]);
+
+  const processSubmit = () => {
+    console.log("FormData: \n", watchAllFields);
+  };
+
+  const handleSubmit = () => {
+    if (isDisable) {
+      triggerValidate();
+    } else {
+      processSubmit();
+    }
+  };
+
   const fetchData = useCallback(async () => {
     try {
       setLoadingQuest(true);
@@ -418,7 +521,20 @@ const StudentAddForm = () => {
       ) : (
         <AppCard>
           <div className="studentAddForm__content-wrapper">
-            <h1 className="mt-8 text-3xl font-bold text-center text-white uppercase mb-14">Add student form</h1>
+            <AppButton
+              variant="secondary"
+              className="ml-auto w-max"
+              onClick={handleChangeLanguage}
+            >
+              <p className="m-0 p-0 text-xl leading-[1.25rem]">
+                {t("changeLanguage")}:{" "}
+                <span className="uppercase">{language}</span>
+              </p>
+            </AppButton>
+
+            <h1 className="mt-8 text-3xl font-bold text-center text-white uppercase mb-14">
+              {t("addStudentForm")}
+            </h1>
             {/* PERSONAL INFORMATION */}
             <>
               <div className="studentAddForm__content-wrapper-header">
@@ -583,9 +699,10 @@ const StudentAddForm = () => {
                         {!!fields.length && !!index ? (
                           <button
                             type="button"
+                            className="border border-gray-500 rounded-lg"
                             onClick={() => handleRemoveEmergencyContact(index)}
                           >
-                            <HiXMark fontSize={24} />
+                            <HiXMark fontSize={24} className="text-gray-500" />
                           </button>
                         ) : null}
                       </div>
@@ -635,7 +752,7 @@ const StudentAddForm = () => {
                       >
                         <div className="health_quest">
                           <div className="quest">
-                            {formatData(item?.question)}
+                            {formatData(t(item?.question))}
                           </div>
 
                           {__checkShowQuestError(item) ? (
@@ -677,6 +794,7 @@ const StudentAddForm = () => {
                           </>
                         ) : (
                           <AppSwitch
+                            label={[t("NO"), t("YES")]}
                             value={item?.answer === HEALTH_ANSWER.YES}
                             onChange={() => {
                               handleChangeQuestionAnswer(
@@ -695,10 +813,17 @@ const StudentAddForm = () => {
               </div>
             </div>
 
-
             {/* Submit button */}
 
-            <button disabled={isDisable}>Submit</button>
+            <AppButton
+              variant={isDisable ? "disabled" : "primary"}
+              className="my-10 ml-auto"
+              onClick={handleSubmit}
+            >
+              <p className="text-lg leading-[1.125rem]">
+                {t("confirm")} & {t("submit")}
+              </p>
+            </AppButton>
           </div>
         </AppCard>
       )}
