@@ -510,7 +510,7 @@ const StudentAddForm = () => {
   }, [fetchData]);
 
   return (
-    <div className="studentAddForm__content disable-scroll xl:max-w-[60vw] 2xl:max-w-[864px] m-auto">
+    <div className="studentAddForm__content disable-scroll xl:max-w-[60vw] 2xl:max-w-[1000px] m-auto">
       {!isTranslationReady ? (
         <div className="flex flex-col items-center gap-20">
           <h1 className="text-2xl text-white opacity-20">
