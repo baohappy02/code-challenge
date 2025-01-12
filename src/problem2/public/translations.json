@@ -1354,9 +1354,11 @@
     "worsenedCondition": "Does your child/Do you have any condition that can effectively be worsened by physical activity?",
     "male": "male",
     "female": "female",
-    "changeLanguage": "Change language"
+    "changeLanguage": "Change language",
+    "requireAvatar": "Please provide the student avatar"
   },
   "vi": {
+    "requireAvatar": "Vui lòng cung cấp ảnh học sinh",
     "submit": "Gửi",
     "male": "nam",
     "changeLanguage": "Đổi ngôn ngữ",

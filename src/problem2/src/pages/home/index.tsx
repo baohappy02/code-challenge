@@ -11,7 +11,7 @@ import {
 import { Resolver, useForm, useFieldArray, useWatch } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import dayjs, { Dayjs } from "dayjs";
-import { HiXMark } from "react-icons/hi2";
+import { HiMiniXMark, HiXMark } from "react-icons/hi2";
 import { HiOutlineExclamationCircle } from "react-icons/hi";
 import {
   isPossiblePhoneNumber,
@@ -41,6 +41,10 @@ import { GENDER_VALUE } from "src/enums/student.enum";
 import AppButton from "src/components/AppButton";
 import { LANGUAGE } from "src/enums/language.enum";
 import { KEY_LANGUAGE } from "src/constants/localStorage.constant";
+import UploadAvatar, {
+  ERROR_MESSAGE_LIMIT_SIZE,
+} from "src/components/UploadAvatar";
+import { useToast } from "src/context/ToastContext";
 
 const validationSchema = yup.OBJECT({
   firstName: yup.STUDENT_NAME,
@@ -58,10 +62,13 @@ const StudentAddForm = () => {
     ready: isTranslationReady,
     i18n: { language, changeLanguage },
   } = useTranslation();
+  const toast = useToast();
 
   const [loadingQuest, setLoadingQuest] = useState(true);
+  const [firstSubmitAttempt, setFirstSubmitAttempt] = useState(false);
+  const [avatarUrl, setAvatarUrl] = useState("");
 
-  const [isDisable, setDisable] = useState(true);
+  const [isSubmitDisabled, setSubmitDisabled] = useState(true);
 
   const [questionList, setQuestionList] = useState<
     ListHealthQuestionnaireDto[]
@@ -179,40 +186,37 @@ const StudentAddForm = () => {
     [watchAllFields?.dob],
   );
 
+  const validateEmergencyContacts = () => {
+    return watchAllFields.emergencyContacts?.every((emergencyContact) => {
+      return Object.values(emergencyContact)?.every((value) => !!value);
+    });
+  };
+
+  const checkEmergencyContactsErrors = () => {
+    if (errors?.emergencyContacts) {
+      // @ts-ignore
+      return !errors?.emergencyContacts
+        ?.filter((ec) => !!ec)
+        ?.filter(
+          (values: any) =>
+            Object.values(values)?.filter((values) => !values)?.length,
+        );
+    }
+    return true;
+  };
+
   useEffect(() => {
-    const noEmptyECS = watchAllFields.emergencyContacts?.every(
-      (emergencyContact) => {
-        return Object.values(emergencyContact)?.every((value) => !!value);
-      },
-    );
-
-    const noECsErrorValues = () => {
-      if (errors?.emergencyContacts) {
-        // @ts-ignore
-        return !errors?.emergencyContacts
-          ?.filter((ec) => !!ec)
-          ?.filter(
-            (values: any) =>
-              Object.values(values)?.filter((values) => !values)?.length,
-          );
-      }
-
-      return true;
-    };
-
-    if (
+    const isFormValid =
+      avatarUrl &&
       watchAllFields.firstName &&
       watchAllFields.lastName &&
       validateFieldDOB &&
       watchAllFields.gender &&
-      noEmptyECS &&
-      noECsErrorValues() &&
-      questListValidate()
-    ) {
-      setDisable(false);
-    } else {
-      setDisable(true);
-    }
+      validateEmergencyContacts() &&
+      checkEmergencyContactsErrors() &&
+      questListValidate();
+
+    setSubmitDisabled(!isFormValid);
   }, [
     watchAllFields,
     errors,
@@ -313,40 +317,38 @@ const StudentAddForm = () => {
     [setValue, trigger],
   );
 
+  const validatePhoneNumber = (val: string, index: number) => {
+    if (!val) {
+      clearErrors(`emergencyContacts.${index}.phoneNumber`);
+      return;
+    }
+
+    const phoneNumberCondition = !!(
+      isValidPhoneNumber(val) && isPossiblePhoneNumber(val)
+    );
+
+    if (phoneNumberCondition) {
+      const isConflicts = watchAllFields?.emergencyContacts?.filter(
+        (ec) => ec?.phoneNumber === val,
+      )?.length;
+
+      if (!isConflicts) {
+        clearErrors(`emergencyContacts.${index}.phoneNumber`);
+      }
+    } else {
+      setError(`emergencyContacts.${index}.phoneNumber`, {
+        type: "custom",
+        message: t("invalidPhoneNumber"),
+      });
+    }
+  };
+
   const handleChangePhoneNumber = useCallback(
     (val: string, index?: number) => {
       if (typeof index !== "number" || index < 0) return;
 
       setValue(`emergencyContacts.${index}.phoneNumber`, val);
-
-      if (!val) {
-        clearErrors(`emergencyContacts.${index}.phoneNumber`);
-
-        return;
-      }
-
-      const phoneNumberCondition = !!(
-        isValidPhoneNumber(val) && isPossiblePhoneNumber(val)
-      );
-
-      if (phoneNumberCondition) {
-        const isConflicts = watchAllFields?.emergencyContacts?.filter(
-          (ec) => ec?.phoneNumber === val,
-        )?.length;
-
-        if (!isConflicts) {
-          // setIsCheckOnServer(true);
-
-          clearErrors(`emergencyContacts.${index}.phoneNumber`);
-
-          // checkExisting(`emergencyContacts.${index}.phoneNumber`, val);
-        }
-      } else {
-        setError(`emergencyContacts.${index}.phoneNumber`, {
-          type: "custom",
-          message: t("invalidPhoneNumber"),
-        });
-      }
+      validatePhoneNumber(val, index);
     },
     [setValue, clearErrors, setError, watchAllFields?.emergencyContacts, t],
   );
@@ -393,6 +395,8 @@ const StudentAddForm = () => {
   }, [setError, clearErrors, getValues, t]);
 
   const triggerValidate = useCallback(() => {
+    setFirstSubmitAttempt(true);
+
     const triggerList = [
       ...(!watchAllFields?.firstName ? ["firstName"] : []),
       ...(!watchAllFields?.lastName ? ["lastName"] : []),
@@ -469,12 +473,35 @@ const StudentAddForm = () => {
     clearErrors,
   ]);
 
+  const toBase64 = (file: File) =>
+    new Promise((resolve, reject) => {
+      const reader = new FileReader();
+      reader.readAsDataURL(file);
+      reader.onload = () => resolve(reader.result);
+      reader.onerror = () => {
+        console.error("Error reading file");
+        reject(new Error("Failed to convert file to base64"));
+      };
+    });
+
+  const handleUploadFile = useCallback(async (file: File) => {
+    if (file) {
+      // use this or upload to get a image url something
+      const imageUrl = await toBase64(file);
+      setAvatarUrl(imageUrl as string);
+    }
+  }, []);
+
+  const handleRemoveAvatar = useCallback(async () => {
+    setAvatarUrl("");
+  }, []);
+
   const processSubmit = () => {
-    console.log("FormData: \n", watchAllFields);
+    console.log("FormData: \n", { avatarUrl, ...watchAllFields });
   };
 
   const handleSubmit = () => {
-    if (isDisable) {
+    if (isSubmitDisabled) {
       triggerValidate();
     } else {
       processSubmit();
@@ -540,67 +567,97 @@ const StudentAddForm = () => {
               <div className="studentAddForm__content-wrapper-header">
                 <AppCardHeader title={t("personalInformation")} />
               </div>
-              <div className="studentAddForm__content-personal_information !flex flex-col lg:!grid">
-                <div className="item">
-                  <AppInput
-                    {...register("firstName")}
-                    label={`${t("firstName")}*`}
-                    onChange={handleChange}
-                    message={{
-                      type: "error",
-                      text: t(errors?.firstName?.message || ""),
+
+              <div className="flex gap-8">
+                <div className="relative">
+                  <UploadAvatar
+                    defaultImage={avatarUrl ? avatarUrl : undefined}
+                    onChangeFile={handleUploadFile}
+                    onErrorFile={(errorMessage: string) => {
+                      if (errorMessage === ERROR_MESSAGE_LIMIT_SIZE) {
+                        toast.error(t("exceedTheMB"));
+                      }
                     }}
                   />
+
+                  {!avatarUrl && firstSubmitAttempt ? (
+                    <>
+                      <div className="mt-2 text-sm text-[#eb5757]">
+                        {t("requireAvatar")}
+                      </div>
+                    </>
+                  ) : null}
+
+                  {avatarUrl ? (
+                    <HiMiniXMark
+                      className="absolute right-[-10px] top-[-10px] rounded-[100%] border border-[#40404A] bg-[#40404A]"
+                      size={24}
+                      onClick={handleRemoveAvatar}
+                    />
+                  ) : null}
                 </div>
-                <div className="item">
-                  <AppInput
-                    {...register("lastName")}
-                    label={`${t("lastName")}*`}
-                    onChange={handleChange}
-                    message={{
-                      type: "error",
-                      text: t(errors?.lastName?.message || ""),
-                    }}
-                  />
-                </div>
-                <div className="item">
-                  <AppInput
-                    {...register("aliasName")}
-                    label={`${t("alias")}`}
-                    onChange={handleChange}
-                    message={{
-                      type: "error",
-                      text: t(errors?.aliasName?.message || ""),
-                    }}
-                  />
-                </div>
-                <div className="item">
-                  <AppDatePicker
-                    {...register("dob")}
-                    label={`${t("dateOfBirth")}*`}
-                    value={
-                      watchAllFields?.dob ? dayjs(watchAllFields?.dob) : null
-                    }
-                    disableFuture
-                    onChange={handleChangeDOB}
-                    message={{
-                      type: "error",
-                      text: t(errors?.dob?.message || ""),
-                    }}
-                  />
-                </div>
-                <div className="item">
-                  <AppGenderInput
-                    {...register("gender")}
-                    label={`${t("gender")}*`}
-                    searchable={false}
-                    defaultValue={watchAllFields?.gender}
-                    onChangeGender={handleChangeGender}
-                    message={{
-                      type: "error",
-                      text: t(errors?.gender?.message || ""),
-                    }}
-                  />
+                <div className="studentAddForm__content-personal_information !flex flex-col lg:!grid">
+                  <div className="item">
+                    <AppInput
+                      {...register("firstName")}
+                      label={`${t("firstName")}*`}
+                      onChange={handleChange}
+                      message={{
+                        type: "error",
+                        text: t(errors?.firstName?.message || ""),
+                      }}
+                    />
+                  </div>
+                  <div className="item">
+                    <AppInput
+                      {...register("lastName")}
+                      label={`${t("lastName")}*`}
+                      onChange={handleChange}
+                      message={{
+                        type: "error",
+                        text: t(errors?.lastName?.message || ""),
+                      }}
+                    />
+                  </div>
+                  <div className="item">
+                    <AppInput
+                      {...register("aliasName")}
+                      label={`${t("alias")}`}
+                      onChange={handleChange}
+                      message={{
+                        type: "error",
+                        text: t(errors?.aliasName?.message || ""),
+                      }}
+                    />
+                  </div>
+                  <div className="item">
+                    <AppDatePicker
+                      {...register("dob")}
+                      label={`${t("dateOfBirth")}*`}
+                      value={
+                        watchAllFields?.dob ? dayjs(watchAllFields?.dob) : null
+                      }
+                      disableFuture
+                      onChange={handleChangeDOB}
+                      message={{
+                        type: "error",
+                        text: t(errors?.dob?.message || ""),
+                      }}
+                    />
+                  </div>
+                  <div className="item">
+                    <AppGenderInput
+                      {...register("gender")}
+                      label={`${t("gender")}*`}
+                      searchable={false}
+                      defaultValue={watchAllFields?.gender}
+                      onChangeGender={handleChangeGender}
+                      message={{
+                        type: "error",
+                        text: t(errors?.gender?.message || ""),
+                      }}
+                    />
+                  </div>
                 </div>
               </div>
             </>
@@ -724,9 +781,9 @@ const StudentAddForm = () => {
             <div>
               <AppCardHeader title={t("healthQuestionnaire")} />
               {/* custom quest list error message */}
-              {!questListValidate() ? (
+              {!questListValidate() && firstSubmitAttempt ? (
                 <>
-                  <div className="studentAddForm__content-health_questionnaire_not_field_err">
+                  <div className="mt-2 text-sm text-[#eb5757]">
                     {t("pleaseFillHQ")}
                   </div>
                 </>
@@ -747,7 +804,7 @@ const StudentAddForm = () => {
                           item?.answerType === HEALTH_ANSWER_TYPE.STRING
                             ? "custom_flex_col"
                             : "!flex-col lg:!flex-row"
-                        } ${__checkShowQuestError(item) ? "showQuestError" : ""}`}
+                        } ${__checkShowQuestError(item) && firstSubmitAttempt ? "showQuestError" : ""}`}
                         key={index}
                       >
                         <div className="health_quest">
@@ -755,7 +812,7 @@ const StudentAddForm = () => {
                             {formatData(t(item?.question))}
                           </div>
 
-                          {__checkShowQuestError(item) ? (
+                          {__checkShowQuestError(item) && firstSubmitAttempt ? (
                             <div className="customQuestError">
                               <HiOutlineExclamationCircle fontSize={24} />
 
@@ -816,7 +873,7 @@ const StudentAddForm = () => {
             {/* Submit button */}
 
             <AppButton
-              variant={isDisable ? "disabled" : "primary"}
+              variant={isSubmitDisabled ? "disabled" : "primary"}
               className="my-10 lg:ml-auto"
               onClick={handleSubmit}
             >
