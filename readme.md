@@ -20,3 +20,5 @@
 [4]: https://github.com/baohappy02/code-challenge "GitHub"
 
 ## Problem1: Messy React
+
+- Did some clean up as the file name after.tsx in problem3 folder
